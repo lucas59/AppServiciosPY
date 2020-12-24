@@ -9,7 +9,7 @@ export const get_token = () => {
     return { type: 'SET_TOKEN' }
 }
 
-export const set_user = (user) => {
+export const SET_USER = (user) => {
     return {
         type: 'SET_USER',
         payload: user

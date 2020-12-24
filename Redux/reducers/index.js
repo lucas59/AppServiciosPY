@@ -1,8 +1,11 @@
 import { combineReducers } from 'redux';
-import superheroesReducers from './superheroesReducer';
 import authReducer from './authReducer';
-
+import locationReducer from './locationReducer'
+import infoReducer from './infoReducer'
+import tagReducer from './tagsReducer'
 export default combineReducers({
-    superheroes: superheroesReducers,
-    auth: authReducer
+    auth: authReducer,
+    location: locationReducer,
+    info: infoReducer,
+    tags: tagReducer
 })

@@ -28,7 +28,6 @@ const HomeTab = createBottomTabNavigator({
 }, {
   initialRouteName: "Home",
   defaultNavigationOptions: ({ navigation }) => ({
-
     tabBarOptions: {
       activeTintColor: "red",
       backgroundColor: "#ebedf1"
@@ -46,32 +45,34 @@ const HomeTab = createBottomTabNavigator({
       return <MaterialCommunityIcons color={focused ? "red" : "gray"} name={iconName} size={30} titnColor />
     },
   }),
-  navigationOptions: ({ navigation }) => ({
-    headerRight: <TouchableOpacity style={{ marginHorizontal: 10 }} ><MaterialCommunityIcons color={"gray"} name={"account"} size={30} titnColor /></TouchableOpacity>,
-
-  })
 });
 
 const Store = createStore(Reducers)
 
-const EntryStack = createSwitchNavigator({
-  Entry: Entry,
+const EntryStack = createStackNavigator({
+  //Entry: Entry,
   Login: Login,
   Signup: Signup
 }, {
-  navigationOptions: {
-    headerShown: false,
-  }
+  headerMode: 'none',
+  mode: "modal"
+
 });
 
 const Stack = createStackNavigator({
-  Entry: {
-    screen: EntryStack
-  },
   Main: {
     screen: HomeTab
   },
-});
+  Entry: {
+    screen: EntryStack
+  },
+},
+  {
+    mode: 'modal',
+    headerMode: 'none',
+  }
+);
+
 
 const AppContainer = createAppContainer(Stack)
 

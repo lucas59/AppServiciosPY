@@ -1,24 +1,31 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Text, Button, ButtonGroup } from 'react-native-elements';
+import { Text, Button, ButtonGroup, CheckBox } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 
-const component1 = () => <Icon name="user" size={32} />;
-const component2 = () => <Icon name="store" size={32} />;
+const component1 = () => <CheckBox
+    title='Click Here'
+    checked={true}
+/>;
+const component2 = () => <CheckBox
+    title='Click Here'
+    checked={false}
+/>;
 
 export default function Step1(props) {
     const buttons = [{ element: component1 }, { element: component2 }]
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>Tipo de cuenta</Text>
+            <Text style={styles.title}>Bienvenido a ...</Text>
+            <Text style={styles.subTitle}>A continuación deberás seguir 3 pasos para crear tu cuenta</Text>
             <View style={styles.options}>
-                    <ButtonGroup
-                        selectedIndex={0}
-                        buttonStyle={styles.buttonGroupStyle}
-                        buttons={buttons}
-                        containerStyle={{ height: 100 }} />
+                <ButtonGroup
+                    buttonStyle={styles.buttonGroupStyle}
+                    buttons={buttons}
+                    containerStyle={styles.buttonGroupContainerStyle}
+                />
             </View>
-                <Button style={styles.next} title="Siguiente" onPress={() => props.wizard.current.next()}></Button>
+            <Button containerStyle={styles.nextContainer} style={styles.next} title="Siguiente" onPress={() => props.wizard.current.next()}></Button>
         </View>
     )
 }
@@ -26,25 +33,47 @@ export default function Step1(props) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: 'lightgray'
+        backgroundColor: 'lightgray',
+        paddingVertical: 50,
+        justifyContent:'center',
+        alignItems:'center',
     },
     title: {
         textAlign: 'center',
         fontSize: 24,
-        paddingVertical: 100,
+        paddingVertical: 10,
         color: 'black',
-        fontWeight: 'bold',
         textTransform: 'uppercase'
+    },
+    subTitle: {
+        textAlign: 'center',
+        fontSize: 14,
+        color: 'black',
     },
     next: {
         width: 300,
         height: 50,
         borderRadius: 50,
     },
+    buttonGroupStyle:{
+        backgroundColor:'transparent',
+    },
+    buttonGroupContainerStyle:{
+        height:100,
+        width:"100%",
+        borderColor:'transparent',
+        backgroundColor:'transparent',
+        borderWidth:1,
+        marginVertical:50,
+    },
     options: {
 
     },
-    next:{
-        width: 300
+    nextContainer:{
+        borderRadius:50,
+    },
+    next: {
+        width: 300,
+
     }
 })

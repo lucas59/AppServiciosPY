@@ -2,33 +2,30 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useState } from 'react'
 import { KeyboardAvoidingView, StyleSheet, Text, View } from 'react-native';
 import { Input, Button, ButtonGroup, CheckBox } from 'react-native-elements';
-import { color } from 'react-native-reanimated';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { StackActions } from 'react-navigation';
 import { useDispatch, useStore } from 'react-redux';
-import validate from 'validate.js';
-import validateWrapper from "validator-wrapper"
-import { set_token, set_user } from '../../../../Redux/reducers/actions/authActions';
+import { set_token, SET_USER } from '../../../../Redux/actions/authActions';
 import { login } from '../../../Api/AuthApi';
 const component1 = () => <Text>Hello</Text>
 const component2 = () => <Text>World</Text>
 
 export default function Login({ navigation }) {
     const buttons = [{ element: component1 }, { element: component2 }]
-    const [correo, setCorreo] = useState("");
-    const [password, setPassword] = useState("");
+    const [correo, setCorreo] = useState("lucasca@gmail.com");
+    const [password, setPassword] = useState("lucasciceri");
     const store = useStore();
     const dispatch = useDispatch();
 
     const onSubmit = () => {
         login({ email: correo, password })
             .then((res) => {
+                console.log("USER: ", res.data.user);
                 const data = res.data;
                 dispatch(set_token(data.token));
-                dispatch(set_user(data.user));
+                dispatch(SET_USER(data.user));
                 AsyncStorage.setItem("auth_token", data.token);
                 AsyncStorage.setItem("auth_user", JSON.stringify(data.user));
-
                 navigation.navigate("Main");
             })
             .catch((err) => {
@@ -61,6 +58,7 @@ export default function Login({ navigation }) {
                         leftIcon={<Icon style={styles.inputIcon} name="lock" size={24} color="black" />}
                     />
                     <Button buttonStyle={styles.buttonOpen} onPress={onSubmit} title="Ingresar" />
+                    <TouchableOpacity onPress={()=>navigation.navigate("Signup")}><Text>Crear cuenta</Text></TouchableOpacity>
                 </View>
             </KeyboardAvoidingView>
         </View>
