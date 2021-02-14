@@ -4,3 +4,9 @@ export const set_store_show = (store) => {
         payload: store
     }
 }
+export const set_stores = (stores) => {
+    return {
+        type: 'SET_STORES',
+        payload: stores
+    }
+}

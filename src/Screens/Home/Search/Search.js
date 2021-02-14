@@ -6,7 +6,6 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useSelector } from 'react-redux';
 
 export default function Search({ navigation }) {
-    const [search, setSearch] = useState("");
     const session = useSelector(state => state.auth.user);
     const [loadingSearch, setLoadingSearch] = useState(false);
     const [searchTerm, setSearchTerm] = useState('')

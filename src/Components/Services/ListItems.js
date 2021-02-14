@@ -1,32 +1,47 @@
 import React from 'react'
 import { View, StyleSheet, Dimensions } from 'react-native'
-import { Icon } from 'react-native-elements'
-import { FlatList } from 'react-native-gesture-handler'
+import { FlatList, TouchableOpacity } from 'react-native-gesture-handler'
 import { Title } from 'react-native-paper'
 import { useDispatch, useSelector } from 'react-redux'
 import { set_tag_show } from '../../../Redux/actions/tagsActions'
+import { Icon } from 'react-native-elements';
+import { set_user_options_show } from '../../../Redux/actions/userActions'
 
-function ListItems({ tags }) {
+function ListItems() {
     const dispatch = useDispatch();
     const tagSelected = useSelector(state => state.tags.tagSelected);
+    const tags = useSelector(state => state.tags.tags);
+
     const onPress = (tag) => {
         dispatch(set_tag_show(tag))
     }
 
     return (
         <View style={styles.headerMaps}>
+            <TouchableOpacity onPress={() => dispatch(set_user_options_show(true))} style={{ zIndex:1000, position: 'absolute', right: 0, top: 0 }}>
+                <Icon
+                    raised
+                    name={"user"}
+                    type="font-awesome-5"
+                    color='#f60'
+                    size={24}
+                    color="orange"
+                />
+            </TouchableOpacity>
             <Title style={styles.welcomeTitle}>Servicios - {tagSelected ? tagSelected.title : "Todos"}</Title>
-            <FlatList horizontal={true} data={tags} style={styles.listServices} contentContainerStyle={styles.listServicesContainer} renderItem={(item) => {
+            <FlatList showsHorizontalScrollIndicator={false} scrollEnabled={true} horizontal={true} data={tags} style={styles.listServices} contentContainerStyle={styles.listServicesContainer} renderItem={(item) => {
                 return (
-                    <Icon
-                        reverse={tagSelected && tagSelected.id === item.item.id}
-                        raised
-                        name={item.item.icon}
-                        type='font-awesome'
-                        color='#f60'
-                        backgroundColor='red'
-                        onPress={() => onPress(item.item)}
-                    />
+                    <TouchableOpacity onPress={() => onPress(item.item)} style={styles.item}>
+                        <Icon
+                            reverse={tagSelected && tagSelected.id === item.item.id}
+                            raised
+                            name={item.item.icon}
+                            type="font-awesome-5"
+                            color='#f60'
+                            size={24}
+                            color="orange"
+                        />
+                    </TouchableOpacity>
                 )
             }} />
         </View>
@@ -54,33 +69,38 @@ const styles = StyleSheet.create({
         shadowOffset: {
             height: 1,
             width: 1
-        }
+        },
+        width: '100%'
+    },
+    item: {
+        height: 50,
+        width: 50,
+        marginHorizontal: 5,
+        padding: 5,
+        borderRadius: 100,
+        justifyContent: 'center',
+        alignItems: "center",
+        shadowOpacity: 0.4,
+        resizeMode: "stretch",
+        borderWidth: 1,
+        borderColor: '#ccc'
+    },
+    icon: {
+        width: 30,
+        height: 30
     },
     listServices: {
         flex: 1,
-        width: "100%",
-        flexDirection: 'row',
     },
     listServicesContainer: {
-        flex: 1,
         alignItems: 'center',
-        justifyContent: "flex-start",
+        marginRight: 'auto',
+        marginLeft: 'auto',
     },
     welcomeTitle: {
         fontSize: 16,
         padding: 5,
         textAlign: 'center'
-    },
-    icons: {
-        borderWidth: 1,
-        borderColor: 'rgba(0,0,0,0.2)',
-        alignItems: 'center',
-        justifyContent: 'center',
-        width: 60,
-        height: 60,
-        backgroundColor: '#fff',
-        borderRadius: 50,
-        marginHorizontal: 10
     },
     mapContainer: {
         backgroundColor: "white",

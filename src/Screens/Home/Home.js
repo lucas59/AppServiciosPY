@@ -1,46 +1,58 @@
 import React, { useEffect, useState } from 'react'
 import { StyleSheet, View, Dimensions, Text } from 'react-native';
-import { Ionicons } from 'react-native-vector-icons'
-import MapView, { Marker } from 'react-native-maps';
 import { getStores, getTags } from '../../Api/DataApi';
-import { Button, ButtonGroup } from 'react-native-elements';
-import { FlatList, ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
-import { Title } from 'react-native-paper';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDispatch, useSelector, useStore } from 'react-redux';
 import Map from './Map/Map';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { SET_USER } from '../../../Redux/actions/authActions';
-import { Icon, Overlay } from 'react-native-elements'
 import ShowStore from '../../Components/Info/ShowStore';
 import ListItems from '../../Components/Services/ListItems';
-
+import { set_tags } from '../../../Redux/actions/tagsActions';
+import { set_region } from '../../../Redux/actions/locationActions';
+import { set_stores } from '../../../Redux/actions/infoActions';
+import { getSession } from '../../Api/AuthApi';
 
 export default function Home() {
     const [init, setInit] = useState(false);
     const [stores, setStores] = useState([]);
     const store = useStore();
-    const [region, setRegion] = useState(null);
     const dispatch = useDispatch();
     const info = useSelector(state => state.info.store);
-    const [tags, setTags] = useState([]);
+    const auth = useSelector(state => state.auth);
 
     const listStores = () => {
         getStores().then((response) => {
             const data = response.data;
-            setStores(data);
+            dispatch(set_stores(data))
         }).catch((err) => {
             console.log("Error: ", err);
+        })
+    }
+
+    const getDataUser = () => {
+        AsyncStorage.getItem("auth_token").then((token) => {
+            if (token) {
+                console.log(token);
+                getSession(token).then((response) => {
+                    console.log(response);
+                })
+                    .catch((err) => {
+                        console.log(err);
+                    })
+            }
         })
     }
 
     const listTags = () => {
         getTags().then((response) => {
             const data = response.data;
-            setTags(data);
+            dispatch(set_tags(data));
+            getDataUser();
+            listStores();
         })
     }
 
+    console.log(auth);
 
     useEffect(() => {
         if (!init) {
@@ -53,9 +65,8 @@ export default function Home() {
                     latitudeDelta: 0.020,
                     longitudeDelta: 0.020
                 }
-                setRegion(region);
+                dispatch(set_region(region));
                 setInit(true);
-                listStores();
                 listTags();
             })
         }
@@ -66,16 +77,13 @@ export default function Home() {
 
     }, [])
 
-    const changeRegion = (region) => {
-        setRegion(region);
-    }
 
 
     return (
         <View style={styles.container}>
-            <ListItems tags={tags} />
+            <ListItems />
             <View style={styles.mapContainer}>
-                <Map region={region} stores={stores} changeRegion={changeRegion} />
+                <Map stores={stores} />
             </View>
             <ShowStore store={info} visible={info ? true : false} />
         </View>

@@ -4,3 +4,10 @@ export const set_tag_show = (tag) => {
         payload: tag
     }
 }
+
+export const set_tags = (tags) => {
+    return {
+        type: 'SET_TAGS',
+        payload: tags
+    }
+}

@@ -1,43 +1,65 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { Image } from 'react-native';
 import { StyleSheet, View } from 'react-native';
-import { Text, Button, ButtonGroup, CheckBox } from 'react-native-elements';
-import Icon from 'react-native-vector-icons/FontAwesome5';
-
-const component1 = () => <CheckBox
-    title='Click Here'
-    checked={true}
-/>;
-const component2 = () => <CheckBox
-    title='Click Here'
-    checked={false}
-/>;
+import { Text, Button } from 'react-native-elements';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import RadioGroup from 'react-native-radio-buttons-group';
+import { useDispatch } from 'react-redux';
+import { SET_DATA_SIGNUP, SET_TYPE_SIGNUP } from '../../../../../Redux/actions/authActions';
+import { StylesButtons } from '../../../../Utils/Styles/StylesButtons';
+import { StyleGenerals } from '../../../../Utils/Styles/StylesGenerals';
 
 export default function Step1(props) {
-    const buttons = [{ element: component1 }, { element: component2 }]
+    const dispatch = useDispatch();
+
+    const data = [
+        {
+            label: 'Comercial',
+            value: "store",
+        },
+        {
+            label: 'Personal',
+            value: "personal",
+        },
+    ];
+
+    const [type, setType] = useState(data);
+    const onPress = value => setType(value);
+
+    const onNext = () => {
+        type.forEach(item => {
+            if (item.selected) {
+                let data = {
+                    type: item.value
+                }
+                dispatch(SET_DATA_SIGNUP(data));
+                props.wizard.current.next();
+            }
+        });
+    }
+
     return (
-        <View style={styles.container}>
-            <Text style={styles.title}>Bienvenido a ...</Text>
-            <Text style={styles.subTitle}>A continuación deberás seguir 3 pasos para crear tu cuenta</Text>
-            <View style={styles.options}>
-                <ButtonGroup
-                    buttonStyle={styles.buttonGroupStyle}
-                    buttons={buttons}
-                    containerStyle={styles.buttonGroupContainerStyle}
-                />
+        <View style={StyleGenerals.container}>
+            <View style={styles.header}>
+                <Text style={styles.title}>Bienvenido</Text>
+                <Text style={styles.subTitle}>Comenzemos a crear tu cuenta..</Text>
             </View>
-            <Button containerStyle={styles.nextContainer} style={styles.next} title="Siguiente" onPress={() => props.wizard.current.next()}></Button>
+            <View style={styles.form}>
+                <View style={styles.images}>
+                    <Image style={styles.logo} source={require("../../../../../assets/icons/locals.png")} />
+                    <Image style={styles.logo} source={require("../../../../../assets/icons/user.png")} />
+                </View>
+                <RadioGroup flexDirection='row' radioButtons={data} onPress={onPress} />
+            </View>
+            <View style={styles.options}>
+                <Button buttonStyle={StylesButtons.buttonSuccess} style={styles.next} title="Siguiente" onPress={onNext}></Button>
+                <TouchableOpacity onPress={() => props.navigation.navigate("Login")}><Text>Iniciar sesión</Text></TouchableOpacity>
+            </View>
         </View>
     )
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: 'lightgray',
-        paddingVertical: 50,
-        justifyContent:'center',
-        alignItems:'center',
-    },
     title: {
         textAlign: 'center',
         fontSize: 24,
@@ -45,32 +67,52 @@ const styles = StyleSheet.create({
         color: 'black',
         textTransform: 'uppercase'
     },
+    header: {
+        justifyContent: 'center',
+        flex:2
+    },
     subTitle: {
         textAlign: 'center',
         fontSize: 14,
         color: 'black',
+    },
+    images: {
+        flexDirection: 'row',
+        justifyContent: "space-evenly",
+        marginVertical: 20,
+    },
+    logo: {
+        width: 50,
+        height: 50,
+        resizeMode: "cover"
+    },
+    form:{
+        flex:3,
+        justifyContent:'center'
+    },
+    options: {
+        flex:1,
+        justifyContent:'center',
+        alignItems:'center'
     },
     next: {
         width: 300,
         height: 50,
         borderRadius: 50,
     },
-    buttonGroupStyle:{
-        backgroundColor:'transparent',
+    buttonGroupStyle: {
+        backgroundColor: 'transparent',
     },
-    buttonGroupContainerStyle:{
-        height:100,
-        width:"100%",
-        borderColor:'transparent',
-        backgroundColor:'transparent',
-        borderWidth:1,
-        marginVertical:50,
+    buttonGroupContainerStyle: {
+        height: 100,
+        width: "100%",
+        borderColor: 'transparent',
+        backgroundColor: 'transparent',
+        borderWidth: 1,
+        marginVertical: 50,
     },
-    options: {
-
-    },
-    nextContainer:{
-        borderRadius:50,
+    nextContainer: {
+        borderRadius: 50,
     },
     next: {
         width: 300,

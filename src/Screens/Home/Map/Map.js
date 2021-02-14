@@ -6,44 +6,39 @@ import { Icon } from 'react-native-elements';
 import MapView, { Marker } from 'react-native-maps';
 import { useDispatch, useSelector } from 'react-redux';
 import { set_store_show } from '../../../../Redux/actions/infoActions';
+import { set_region } from '../../../../Redux/actions/locationActions';
 
-function Map({ region, changeRegion, stores }) {
+function Map() {
     const dispatch = useDispatch();
     const tagSelected = useSelector(state => state.tags.tagSelected);
+    const tags = useSelector(state => state.tags.tags);
+    const region = useSelector(state => state.location.region);
+    const stores = useSelector(state => state.info.stores);
     const showInfo = (store) => {
         dispatch(set_store_show(store));
+    }
+    const changeRegion = (region) => {
+        //dispatch(set_region(region));
     }
     return (
         <MapView region={region} showsUserLocation={true} onRegionChangeComplete={changeRegion} style={styles.map} >
             {stores.map((store, index) => {
                 const coords = JSON.parse(store.user.locations[0].location);
+                let tag = tags.find(tag => tag.id === store.tagId);
                 if (tagSelected) {
-                    if (tagSelected.id === store.tagId) {
+                    if (tagSelected.id === 0 || tagSelected.id === store.tagId) {
                         return (
-                            <Marker onPress={() => showInfo(store)} coordinate={coords}>
+                            <Marker style={styles.item} onPress={() => showInfo(store)} coordinate={coords}>
                                 <Icon
                                     raised
-                                    name={"heart"}
-                                    style={styles.marker}
-                                    type='font-awesome'
+                                    name={tag.icon}
+                                    type="font-awesome-5"
                                     color='#f60'
-                                    backgroundColor='red'
+                                    size={24}
+                                    color="black"
                                 />
                             </Marker>)
                     }
-                } else {
-                    return (
-                        <Marker onPress={() => showInfo(store)} coordinate={coords} >
-                            <Icon
-                                raised
-                                name={"heart"}
-                                source={require('../../../../assets/icon.png')}
-                                style={styles.marker}
-                                type='font-awesome'
-                                color='#f60'
-                                backgroundColor='red'
-                            />
-                        </Marker>)
                 }
             })}
         </MapView>
@@ -57,7 +52,19 @@ const styles = StyleSheet.create({
     },
     marker: {
 
-    }
+    },
+    item: {
+        height: 50,
+        width: 50,
+        marginHorizontal: 5,
+        padding: 5,
+        borderRadius: 100,
+        backgroundColor: 'white'
+    },
+    icon: {
+        width: 30,
+        height: 30
+    },
 })
 
 

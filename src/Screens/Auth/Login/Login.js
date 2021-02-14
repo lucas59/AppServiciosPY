@@ -1,24 +1,43 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import React, { useState } from 'react'
-import { KeyboardAvoidingView, StyleSheet, Text, View } from 'react-native';
-import { Input, Button, ButtonGroup, CheckBox } from 'react-native-elements';
+import { useFormik } from 'formik';
+import React, { useEffect, useState } from 'react'
+import { Alert, KeyboardAvoidingView, StyleSheet, Text, View } from 'react-native';
+import { Button } from 'react-native-elements';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import { useDispatch, useStore } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { set_token, SET_USER } from '../../../../Redux/actions/authActions';
 import { login } from '../../../Api/AuthApi';
-const component1 = () => <Text>Hello</Text>
-const component2 = () => <Text>World</Text>
+import { StylesButtons } from '../../../Utils/Styles/StylesButtons';
+import { StyleGenerals } from '../../../Utils/Styles/StylesGenerals';
+import MyTextInput from '../Signup/Forms/MyTextInput';
+
+const validate = (values) => {
+    let errors = {};
+
+    if (!values.email) {
+        errors.email = "Requerido"
+    } else if (! /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(values.email)) {
+        errors.email = "Correo invalido";
+    }
+    if (!values.password) {
+        errors.password = "Requerido"
+    }
+    return errors;
+}
 
 export default function Login({ navigation }) {
-    const buttons = [{ element: component1 }, { element: component2 }]
-    const [correo, setCorreo] = useState("lucasca@gmail.com");
-    const [password, setPassword] = useState("lucasciceri");
-    const store = useStore();
     const dispatch = useDispatch();
 
-    const onSubmit = () => {
-        login({ email: correo, password })
+    useEffect(() => {
+        AsyncStorage.getItem("auth_token").then((value) => {
+            if (value) {
+                // navigation.navigate("Main");
+            }
+        })
+    }, [])
+
+    const onSubmit = (values) => {
+        login({ email: values.email, password: values.password })
             .then((res) => {
                 console.log("USER: ", res.data.user);
                 const data = res.data;
@@ -28,40 +47,49 @@ export default function Login({ navigation }) {
                 AsyncStorage.setItem("auth_user", JSON.stringify(data.user));
                 navigation.navigate("Main");
             })
-            .catch((err) => {
-                console.log(err);
+            .catch(({ response }) => {
+                Alert.alert("Aviso", response.data.message);
+
             })
     }
+    const formik = useFormik({
+        initialValues: {
+            email: '',
+            password: '',
+        },
+        onSubmit: values => onSubmit(values),
+        validate
+    });
 
     return (
-        <View style={styles.container}>
-            <Text style={styles.title}>Login</Text>
-            <KeyboardAvoidingView style={{ flex: 1, paddingVertical: 10 }}>
-                <View style={styles.form}>
-                    <Input
-                        inputStyle={styles.input}
-                        containerStyle={styles.containerInput}
-                        label="Correo"
-                        onChangeText={setCorreo}
-                        value={correo}
-                        placeholder="Correo"
-                        leftIcon={<Icon style={styles.inputIcon} name="user" size={24} color="black" />}
-                    />
-                    <Input
-                        inputStyle={styles.input}
-                        containerStyle={styles.containerInput}
-                        label="Contraseña"
-                        onChangeText={setPassword}
-                        value={password}
-                        placeholder="Contraseña"
-                        secureTextEntry={true}
-                        leftIcon={<Icon style={styles.inputIcon} name="lock" size={24} color="black" />}
-                    />
-                    <Button buttonStyle={styles.buttonOpen} onPress={onSubmit} title="Ingresar" />
-                    <TouchableOpacity onPress={()=>navigation.navigate("Signup")}><Text>Crear cuenta</Text></TouchableOpacity>
-                </View>
-            </KeyboardAvoidingView>
-        </View>
+        <KeyboardAvoidingView style={StyleGenerals.container}>
+            <View style={styles.header}>
+                <Text style={{ fontSize: 40 }}>Login</Text>
+            </View>
+            <View style={styles.form}>
+                <MyTextInput
+                    placeholder="Correo"
+                    onChangeText={formik.handleChange('email')}
+                    value={formik.values.email}
+                    error={formik.errors.email}
+                    onBlur={formik.handleBlur('email')}
+                    touched={formik.touched.email}
+                />
+                <MyTextInput
+                    placeholder="Contraseña"
+                    onChangeText={formik.handleChange('password')}
+                    value={formik.values.password}
+                    error={formik.errors.password}
+                    onBlur={formik.handleBlur('password')}
+                    touched={formik.touched.password}
+                />
+            </View>
+            <View style={styles.options}>
+                <Button buttonStyle={StylesButtons.buttonSuccess} title="Ingresar" onPress={formik.handleSubmit} />
+                <TouchableOpacity onPress={() => navigation.navigate("Signup")}><Text>Crear cuenta</Text></TouchableOpacity>
+            </View>
+        </KeyboardAvoidingView>
+
     )
 }
 
@@ -70,33 +98,19 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: 'lightgray'
     },
-    title: {
-        textAlign: 'center',
-        fontSize: 24,
-        paddingVertical: 100,
-        color: 'black',
-        fontWeight: 'bold',
-        textTransform: 'uppercase'
+    header: {
+        flex: 2,
+        justifyContent:'center',
+        alignItems:'center'
     },
     form: {
-        flex: 1,
+        flex: 3,
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
     },
-    containerInput: {
-        width: "90%",
-        marginHorizontal: 'auto'
-    },
-    input: {
-
-    },
-    inputIcon: {
-        color: "gray"
-    },
-    buttonOpen: {
-        width: 300,
-        height: 50,
-        marginVertical: 10,
-        borderRadius: 50
+    options: {
+        flex: 1,
+        justifyContent:'center',
+        alignItems:'center'
     }
 })
