@@ -1,0 +1,1 @@
+export const requiered_field = 'Campo requerido';

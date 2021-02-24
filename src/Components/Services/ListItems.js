@@ -6,6 +6,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import { set_tag_show } from '../../../Redux/actions/tagsActions'
 import { Icon } from 'react-native-elements';
 import { set_user_options_show } from '../../../Redux/actions/userActions'
+import { Text } from 'react-native'
+import { CHANGE_OPTIONPANEL_VISIBLE } from '../../../Redux/actions/panelsActions'
 
 function ListItems() {
     const dispatch = useDispatch();
@@ -18,17 +20,19 @@ function ListItems() {
 
     return (
         <View style={styles.headerMaps}>
-            <TouchableOpacity onPress={() => dispatch(set_user_options_show(true))} style={{ zIndex:1000, position: 'absolute', right: 0, top: 0 }}>
-                <Icon
-                    raised
-                    name={"user"}
-                    type="font-awesome-5"
-                    color='#f60'
-                    size={24}
-                    color="orange"
-                />
-            </TouchableOpacity>
-            <Title style={styles.welcomeTitle}>Servicios - {tagSelected ? tagSelected.title : "Todos"}</Title>
+            <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+                <Title style={styles.welcomeTitle}>Servicios - {tagSelected ? tagSelected.title : "Todos"}</Title>
+                <View style={{ position: 'absolute', left: 20 }}>
+                    <Icon
+                        onPress={() => dispatch(CHANGE_OPTIONPANEL_VISIBLE(true))}
+                        name={"bars"}
+                        type="font-awesome-5"
+                        color='#f60'
+                        size={24}
+                        color="orange"
+                    />
+                </View>
+            </View>
             <FlatList showsHorizontalScrollIndicator={false} scrollEnabled={true} horizontal={true} data={tags} style={styles.listServices} contentContainerStyle={styles.listServicesContainer} renderItem={(item) => {
                 return (
                     <TouchableOpacity onPress={() => onPress(item.item)} style={styles.item}>
@@ -49,18 +53,12 @@ function ListItems() {
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#F6F6F6'
-    },
+
     headerMaps: {
         flex: 1,
         backgroundColor: 'white',
         paddingVertical: 20,
         marginBottom: 10,
-        marginTop: 20,
         justifyContent: 'center',
         borderRadius: 15,
         shadowColor: "#000000",
@@ -100,7 +98,8 @@ const styles = StyleSheet.create({
     welcomeTitle: {
         fontSize: 16,
         padding: 5,
-        textAlign: 'center'
+        textAlign: 'center',
+        alignSelf: 'center'
     },
     mapContainer: {
         backgroundColor: "white",

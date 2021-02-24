@@ -1,10 +1,11 @@
 import axios from 'axios';
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { StyleSheet } from 'react-native'
 import Wizard from 'react-native-wizard';
 import { useDispatch, useSelector, useStore } from 'react-redux';
 import { signupPersonal, signupStore } from '../../../Api/AuthApi';
 import { uploadImage } from '../../../Api/FirebaseApi';
+import { getCategories } from '../../../Api/DataApi';
 
 import Step1 from "./Steps/Step1";
 import Step2 from "./Steps/Step2 copy";
@@ -12,6 +13,7 @@ import StepPassword from "./Steps/Step3";
 import StepMap from './Steps/StepMap';
 import { Alert } from 'react-native';
 import { CHANGE_CREATING_ACCOUNT } from '../../../../Redux/actions/signupActions';
+import { set_categories } from '../../../../Redux/actions/categoryActions';
 
 export default function Signup({ navigation }) {
     const wizard = useRef(null);
@@ -25,26 +27,45 @@ export default function Signup({ navigation }) {
 
     const activeStep = useSelector(state => state.signup.activeStep);
 
+    useEffect(() => {
+        getCategories()
+            .then((categories) => {
+                console.log(categories);
+                if (categories.length > 0) {
+                    let prepareToPicker = [];
+                    categories.forEach(category => { //prepare to picker
+                        category.value = category.id.toString();
+                        category.label = category.title.toString();
+
+                        prepareToPicker.push(category);
+                    });
+                    dispatch(set_categories(prepareToPicker));
+                }
+            })
+            .catch((err) => {
+                console.log(err);
+            })
+    }, [])
 
     const onSubmit = async (values) => {
-        dispatch(CHANGE_CREATING_ACCOUNT(true))
         var newData = signup.data;
         newData.image = signup.image;
         newData.password = values.password;
         newData.location = address;
+        newData.category = parseInt(newData.category);
 
+        console.log(newData);
 
         if (signup.data.type === 'store') {
 
             if (signup.data.image) {
                 uploadImage(signup.data.image).then((filename) => {
                     newData.image = filename;
-
                     signupStore(newData)
                         .then((response) => {
                             dispatch(CHANGE_CREATING_ACCOUNT(false))
-                            Alert.alert("Success");
-                             navigation.replace('Login');
+                            Alert.alert("Cuenta creada con exito");
+                            navigation.navigate('Login');
                         })
                         .catch(err => {
                             console.log(err);
@@ -61,9 +82,8 @@ export default function Signup({ navigation }) {
                 signupStore(newData)
                     .then((response) => {
                         dispatch(CHANGE_CREATING_ACCOUNT(true))
-                        Alert.alert("Success");
-
-                        // navigation.navigate('Main');
+                        Alert.alert("Cuenta creada con exito");
+                        navigation.navigate('Login');
                     })
                     .catch(err => {
                         console.log(err);
@@ -72,9 +92,8 @@ export default function Signup({ navigation }) {
             }
 
         } else {
-            let formData = new FormData();
 
-            signupPersonal(signup)
+            signupPersonal(newData)
                 .then((response) => {
                     console.log(response);
                     alert("Usuario")

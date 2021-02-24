@@ -1,38 +1,46 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Profile from './Options/Profile'
 import About from './Options/About'
-import Profile from './Options/Profile'
 import PanelListItems from './PanelListItems'
 import Help from './Options/Help'
-import Messages from './Options/Message'
-import Favorites from './Options/Favorites'
-import Orders from './Options/Orders'
+import { SwipeablePanel } from 'rn-swipeable-panel'
+import { useDispatch, useSelector } from 'react-redux'
+import { CHANGE_OPTIONPANEL_VISIBLE } from '../../../../Redux/actions/panelsActions'
 
-export default function PanelOptions() {
+export default function PanelOptions({ navigation }) {
+    const item = "none"
+    const dispatch = useDispatch();
 
+    const closePanel = () =>{
+        dispatch(CHANGE_OPTIONPANEL_VISIBLE(false))
+    }
+
+    const [panelProps, setPanelProps] = useState({
+        fullWidth: true,
+        openLarge: true,
+        showCloseButton: true,
+        onClose: () => closePanel(),
+        onPressCloseButton: () => closePanel(),
+        // ...or any prop you want
+    });
+    const visible = useSelector(state => state.optionsPanel.visible)
     const handleItem = (code) => {
         setitem(code);
     }
-    
+    console.log(visible);
     return (
-        <SwipeablePanel closeRootStyle={styles.close} {...panelProps} isActive={panelDrawer}>
-        { item === 'none' ? (
-            <PanelListItems handleItem={handleItem} />
-        ) : item === 'profile' ? (
-            <Profile />
-        ) : item === 'about' ? (
-            <About />
-        ) : item === 'help' ? (
-            <Help />
-        ) : item === "messages" ? (
-            <Messages />
-        ) : item === 'favorites' ? (
-            <Favorites />
-        ) : item === 'orders' ? (
-            <Orders />
-        ) : (
-                                        <Text>Cargando</Text>
-                                    )}
-    </SwipeablePanel>
+        <SwipeablePanel {...panelProps} isActive={visible}>
+            { item === 'none' ? (
+                <PanelListItems navigation={navigation} handleItem={handleItem} />
+            ) : item === 'profile' ? (
+                <Profile />
+            ) : item === 'about' ? (
+                <About />
+            ) : item === 'help' ? (
+                <Help />
+            ) : (
+                                <Text>Cargando</Text>
+                            )}
+        </SwipeablePanel>
     )
 }

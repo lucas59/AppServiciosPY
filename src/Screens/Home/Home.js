@@ -4,26 +4,44 @@ import { getStores, getTags } from '../../Api/DataApi';
 import { useDispatch, useSelector, useStore } from 'react-redux';
 import Map from './Map/Map';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { SET_USER } from '../../../Redux/actions/authActions';
+import { set_token, SET_USER } from '../../../Redux/actions/authActions';
 import ShowStore from '../../Components/Info/ShowStore';
 import ListItems from '../../Components/Services/ListItems';
 import { set_tags } from '../../../Redux/actions/tagsActions';
 import { set_region } from '../../../Redux/actions/locationActions';
 import { set_stores } from '../../../Redux/actions/infoActions';
 import { getSession } from '../../Api/AuthApi';
+import PanelOptions from '../../Components/User/PanelOptions/PanelOptions';
+import * as firebase from 'firebase';
+import { getDownloadUrl } from '../../Utils/Firebase/FirebaseUtils';
+import { ADD_SEARCH } from '../../../Redux/actions/searchActions';
 
-export default function Home() {
+export default function Home({ navigation }) {
     const [init, setInit] = useState(false);
     const [stores, setStores] = useState([]);
     const store = useStore();
     const dispatch = useDispatch();
     const info = useSelector(state => state.info.store);
-    const auth = useSelector(state => state.auth);
 
     const listStores = () => {
         getStores().then((response) => {
             const data = response.data;
-            dispatch(set_stores(data))
+
+            for (let index = 0; index < data.length; index++) {
+                const store = data[index];
+
+                getDownloadUrl(store.img_first).then((url) => {
+                    data[index].img_first = url;
+                })
+                    .catch((err) => {
+                        console.log(err);
+                    })
+                if (index === data.length - 1) {
+                    console.log("DATA ", data);
+
+                    dispatch(set_stores(data))
+                }
+            }
         }).catch((err) => {
             console.log("Error: ", err);
         })
@@ -32,7 +50,6 @@ export default function Home() {
     const getDataUser = () => {
         AsyncStorage.getItem("auth_token").then((token) => {
             if (token) {
-                console.log(token);
                 getSession(token).then((response) => {
                     console.log(response);
                 })
@@ -52,13 +69,10 @@ export default function Home() {
         })
     }
 
-    console.log(auth);
 
     useEffect(() => {
         if (!init) {
-            console.log("Store: ", store.getState());
             navigator.geolocation.getCurrentPosition((position) => {
-                console.log(position);
                 let region = {
                     latitude: position.coords.latitude,
                     longitude: position.coords.longitude,
@@ -71,10 +85,19 @@ export default function Home() {
             })
         }
 
+        AsyncStorage.getItem("auth_token").then((token) => {
+            dispatch(set_token(token));
+        })
         AsyncStorage.getItem("auth_user").then((session) => {
             dispatch(SET_USER(JSON.parse(session)));
         })
-
+        AsyncStorage.getItem("searches").then((searches) => {
+            if (searches !== null) {
+                dispatch(ADD_SEARCH(JSON.parse(searches)));
+            } else {
+                dispatch(ADD_SEARCH([]));
+            }
+        })
     }, [])
 
 
@@ -85,7 +108,10 @@ export default function Home() {
             <View style={styles.mapContainer}>
                 <Map stores={stores} />
             </View>
-            <ShowStore store={info} visible={info ? true : false} />
+            <ShowStore store={info} visible={info ? true : false} />{/* Muestro informacion del comercio */}
+
+            <PanelOptions navigation={navigation} />
+
         </View>
     )
 }
@@ -101,7 +127,8 @@ const styles = StyleSheet.create({
     mapContainer: {
         backgroundColor: "white",
         width: Dimensions.get('window').width,
-        height: '70%',
+        height: '100%',
+        flex: 4,
         borderTopEndRadius: 15,
     }
 })

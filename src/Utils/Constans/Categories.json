@@ -1,0 +1,18 @@
+[
+    {
+        "label": "Panadería",
+        "value": "0"
+    },
+    {
+        "label": "Carnicería",
+        "value": "1"
+    },
+    {
+        "label": "Supermercado",
+        "value": "2"
+    },
+    {
+        "label": "Autoservice",
+        "value": "3"
+    }
+]

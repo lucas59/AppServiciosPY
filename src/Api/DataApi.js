@@ -11,12 +11,22 @@ export function getStores() {
     })
 }
 
-export function getTags() {
+export function getTags() { // TODO remplace tags to categories
     return new Promise((res, req) => {
         Axios.get(TAGS, {
             withCredentials: true
         })
             .then((response) => res(response))
             .catch(err => req(err))
+    })
+}
+
+export function getCategories() { 
+    return new Promise((res, rej) => {
+        Axios.get(TAGS, {
+            withCredentials: true
+        })
+            .then((response) => res(response.data))
+            .catch(err => rej(err))
     })
 }

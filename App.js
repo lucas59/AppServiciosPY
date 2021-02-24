@@ -12,27 +12,31 @@ import 'react-native-gesture-handler';
 import { Provider } from 'react-redux';
 import * as firebase from 'firebase';
 
-
-import {
-  useFonts,
-  Quicksand_300Light,
-  Roboto_400Regular
-} from "@expo-google-fonts/dev";
 import { createStore } from 'redux';
 import ApikeyDemo from './src/Utils/Constans/Apikey.demo';
 
 
 const HomeTab = createBottomTabNavigator({
-  Home: { screen: Home },
-  Search: { screen: Search }
+  Home: {
+    screen: Home,
+    navigationOptions: {
+      title: "Mapa"
+    }
+  },
+  Search: {
+    screen: Search,
+    navigationOptions: {
+      title: "Buscador"
+    }
+  }
 }, {
   initialRouteName: "Home",
   defaultNavigationOptions: ({ navigation }) => ({
     tabBarOptions: {
-      activeTintColor: "red",
-      backgroundColor: "#ebedf1"
+      activeTintColor: "orange",
+      backgroundColor: "#ebedf1",
     },
-    headerShown: false,
+    headerShown: true,
     tabBarIcon: ({ focused, horizontal, titnColor }) => {
       const { routeName } = navigation.state;
       let iconName;
@@ -42,7 +46,7 @@ const HomeTab = createBottomTabNavigator({
         iconName = `map-search${focused ? '' : '-outline'}`
 
       }
-      return <MaterialCommunityIcons color={focused ? "red" : "gray"} name={iconName} size={30} titnColor />
+      return <MaterialCommunityIcons color={focused ? "orange" : "gray"} name={iconName} size={30} titnColor />
     },
   }),
 });
@@ -55,7 +59,7 @@ const EntryStack = createStackNavigator({
 }, {
   headerMode: 'none',
   mode: "modal",
-  initialRouteName:"Signup"
+  initialRouteName: "Login"
 });
 
 const Stack = createStackNavigator({
@@ -67,8 +71,7 @@ const Stack = createStackNavigator({
   },
 },
   {
-    initialRouteName:"Entry",
-    mode: 'modal',
+    initialRouteName: "Entry",
     headerMode: 'none',
   }
 );

@@ -39,7 +39,7 @@ export default function StepType(props) {
             <View style={StyleGenerals.form}>
                 <View style={styles.header}>
                     <Text style={styles.title}>Bienvenido</Text>
-                    <Text style={styles.subTitle}>Comenzemos a crear tu cuenta..</Text>
+                    <Text style={styles.subTitle}>Comencemos a crear tu cuenta..</Text>
                 </View>
                 <View style={styles.images}>
                     <Image style={styles.logo} source={require("../../../../../assets/icons/locals.png")} />

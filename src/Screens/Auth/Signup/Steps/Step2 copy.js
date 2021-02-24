@@ -12,9 +12,8 @@ function Step2(props) {
     const onSubmit = (values) => {
         let newData = values;
         newData.type = signupState.type;
-
+        
         dispatch(SET_DATA_SIGNUP(newData));
-
         if (signupState.type === "personal") {
             dispatch(SET_STEP(3))
             props.wizard.current.next();

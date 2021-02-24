@@ -5,86 +5,75 @@ import { Image } from 'react-native'
 import { View } from 'react-native'
 import { FlatList, TouchableOpacity } from 'react-native-gesture-handler'
 import { useDispatch, useSelector } from 'react-redux'
-import { SET_ITEM, SET_PANEL } from '../../../Redux/Actions/InfoActions'
-import { onSubmitCloseSession } from '../../../API/AuthApi';
-import { SET_SESSION } from '../../../Redux/Actions/AuthActions'
-import { useNavigation } from '@react-navigation/native'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { CHANGE_OPTIONPANEL_VISIBLE } from '../../../../Redux/actions/panelsActions'
+import { set_token, SET_USER } from '../../../../Redux/actions/authActions'
+import { Dimensions } from 'react-native'
 
-function PanelListItems() {
-    const session = useSelector(state => state.auth.session);
-    const navigation = useNavigation();
-    console.log("Session: ", session);
+function PanelListItems({ navigation }) {
+    const token = useSelector(state => state.auth.token);
     const dispatch = useDispatch();
     const list = [
         {
-            title: 'Viajes',
-            code: 'orders',
-            icon: require("../../../assets/map.png")
+            title: 'Perfil',
+            code: 'profile',
+            icon: require("../../../../assets/user-icon.png")
         },
         {
             title: 'Favoritos',
             code: 'favorites',
-            icon: require("../../../assets/heart.png")
+            icon: require("../../../../assets/heart.png")
 
         },
-        {
-            title: 'Mensajes',
-            code: 'messages',
-            icon: require("../../../assets/message.png")
-        },
-        {
-            title: 'Perfil',
-            code: 'profile',
-            icon: require("../../../assets/user-icon.png")
-        },
+
         {
             title: 'Acerca de',
             code: 'about',
-            icon: require("../../../assets/info.png")
+            icon: require("../../../../assets/info.png")
         },
         {
             title: 'Ayuda',
             code: 'help',
-            icon: require("../../../assets/question.png")
+            icon: require("../../../../assets/question.png")
         },
     ]
 
     const keyExtractor = (item, index) => index.toString()
 
-    const closeSession = () => {
-        onSubmitCloseSession().then(() => {
-            dispatch(SET_SESSION(null));
-            dispatch(SET_PANEL(false));
+
+    const closeSession = async () => {
+        dispatch(CHANGE_OPTIONPANEL_VISIBLE(false));
+        dispatch(set_token(null));
+        dispatch(SET_USER(null));
+        await AsyncStorage.removeItem("auth_user");
+        AsyncStorage.removeItem("auth_token").then(() => {
+            navigation.navigate("Entry");
         })
+
     }
 
     const openSession = () => {
-        navigation.navigate("Auth");
+        console.log(navigation);
+        navigation.replace("Entry");
 
     }
-
+    console.log("TOKEN ", token);
     return (
-        <View style={{ flex: 1, paddingHorizontal: 50 }}>
+        <View style={{ flex: 1, minHeight: 500, paddingHorizontal: 20, alignItems: 'center', justifyContent: 'center' }}>
             <Text>Menú</Text>
-            <FlatList data={list} keyExtractor={keyExtractor} renderItem={(objet) => (
-                <TouchableOpacity onPress={() => dispatch(SET_ITEM(objet.item.code))} style={styles.item}>
-                    {/*<Icon
-                        name={objet.item.icon}
-                        style={styles.icon}
-                        size={35}
-                        color='#517fa4'
-                        type="entypo"
-                    />*/}
-                    <Image style={styles.icon} source={objet.item.icon} />
+            {token && (
+                <FlatList style={{ width: '100%' }} data={list} keyExtractor={keyExtractor} renderItem={(objet) => (
+                    <TouchableOpacity onPress={() => dispatch(SET_ITEM(objet.item.code))} style={styles.item}>
+                        <Image style={styles.icon} source={objet.item.icon} />
+                        <Text style={styles.title}>{objet.item.title}</Text>
+                    </TouchableOpacity>
+                )} />
+            )}
 
-                    <Text style={styles.title}>{objet.item.title}</Text>
-                </TouchableOpacity>
-            )} />
-            {session ? (
+            {token ? (
                 <TouchableOpacity onPress={closeSession}>
                     <Text style={styles.closeSession}>Cerrar sesión</Text>
                 </TouchableOpacity>
-
             ) : (
                     <TouchableOpacity onPress={openSession}>
                         <Text style={styles.openSession}>Inicia sesión</Text>

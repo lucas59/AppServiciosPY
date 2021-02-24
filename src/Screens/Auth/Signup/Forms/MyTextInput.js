@@ -20,6 +20,7 @@ export default function MyTextInput(props) {
         textContentType={props.type}
         onBlur={props.onBlur}
         autoCompleteType={props.autoCompleteType}
+        autoCapitalize={props.autoCapitalize}
       />
       {props.error && props.touched ? <Text style={StylesInput.errorMessage}>{props.error}</Text> : null}
     </View>

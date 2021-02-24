@@ -2,7 +2,6 @@ import React from 'react'
 import { View } from 'react-native'
 import { Text } from 'react-native'
 import { StyleSheet } from 'react-native'
-import ButtonBack from '../ButtonBack'
 
 function Help() {
     return (

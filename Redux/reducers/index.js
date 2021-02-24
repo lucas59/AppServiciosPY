@@ -4,19 +4,17 @@ import locationReducer from './locationReducer'
 import infoReducer from './infoReducer'
 import tagReducer from './tagsReducer'
 import signupReducer from './signupReducer'
-
-const initialStateSignin = {
-    email: '',
-    name: '',
-    phone: '',
-    web: '',
-    description: ''
-}
+import categoryReducer from './categoryReducer'
+import panelsReducer from './panelsReducer'
+import searchReducer from './searchReducer'
 
 export default combineReducers({
     auth: authReducer,
     location: locationReducer,
     info: infoReducer,
     tags: tagReducer,
-    signup: signupReducer
+    signup: signupReducer,
+    category: categoryReducer,
+    optionsPanel: panelsReducer,
+    filters: searchReducer
 })

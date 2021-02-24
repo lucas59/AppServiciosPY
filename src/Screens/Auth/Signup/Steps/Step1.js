@@ -42,7 +42,7 @@ export default function Step1(props) {
         <View style={StyleGenerals.container}>
             <View style={styles.header}>
                 <Text style={styles.title}>Bienvenido</Text>
-                <Text style={styles.subTitle}>Comenzemos a crear tu cuenta..</Text>
+                <Text style={styles.subTitle}>Comencemos a crear tu cuenta..</Text>
             </View>
             <View style={styles.form}>
                 <View style={styles.images}>

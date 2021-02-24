@@ -4,8 +4,6 @@ import { Text } from 'react-native'
 import { StyleSheet } from 'react-native'
 import { Button, Icon, Input } from 'react-native-elements';
 import { useDispatch } from 'react-redux';
-import { SET_ITEM } from '../../../../Redux/Actions/InfoActions';
-import ButtonBack from '../ButtonBack';
 
 function Profile() {
     const dispatch = useDispatch();

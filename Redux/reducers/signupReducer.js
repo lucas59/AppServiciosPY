@@ -3,8 +3,9 @@ import { SET_STEP_SIGNUP, SET_SHOW_CONFIRM_MAP, SET_REGION, SET_ADDRESS, SET_SEA
 const initialState = {
     activeStep: 0,
     showConfirmMap: false,
-    creatingAccount: false
+    creatingAccount: false,
 }
+
 export default (state = initialState, action) => {
     switch (action.type) {
         case SET_STEP_SIGNUP:

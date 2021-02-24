@@ -1,4 +1,4 @@
-const URL_BACKEND = "http://192.168.1.98:8002/";
+const URL_BACKEND = "http://192.168.1.5:8002/";
 export const API_KEY_GOOGLE_MAPS = "http://localhost:8002/";
 
 export const LOGIN = URL_BACKEND + "user/login";
