@@ -6,7 +6,7 @@ const initialState = {
 export default (state = initialState, action) => {
     switch (action.type) {
         case ALTERN_PANEL:
-            return { ...state, visible: action.payload }
+            return { ...state, open: action.payload }
         default:
             return state
     }

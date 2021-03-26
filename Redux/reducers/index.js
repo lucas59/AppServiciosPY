@@ -5,8 +5,9 @@ import infoReducer from './infoReducer'
 import tagReducer from './tagsReducer'
 import signupReducer from './signupReducer'
 import categoryReducer from './categoryReducer'
-import panelsReducer from './panelsReducer'
+import panelReducer from './panelReducer'
 import searchReducer from './searchReducer'
+import tabsReducers from './tabsReducers'
 
 export default combineReducers({
     auth: authReducer,
@@ -15,6 +16,8 @@ export default combineReducers({
     tags: tagReducer,
     signup: signupReducer,
     category: categoryReducer,
-    optionsPanel: panelsReducer,
-    filters: searchReducer
+    panel: panelReducer,
+    filters: searchReducer,
+
+    tabsManager: tabsReducers
 })

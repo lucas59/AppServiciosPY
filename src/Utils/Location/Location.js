@@ -4,7 +4,6 @@ export const GeocodePosition = (address) => {
     return new Promise((res, rej) => {
         Location.enableNetworkProviderAsync()
         Location.geocodeAsync(address,{}).then((region) => {
-            console.log(region);
             res(region)
         })
             .catch((err) => {

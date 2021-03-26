@@ -60,7 +60,6 @@ export default function Search({ navigation }) {
     }
 
     const Item = ({ item, onPress, style }) => {
-        console.log("Item: ", item);
         const stylesItem = StyleSheet.create({
             container: {
                 marginVertical: 5,

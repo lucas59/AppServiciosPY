@@ -1,35 +1,65 @@
-import React, { useEffect, useState } from 'react'
-import { StyleSheet, View, Dimensions, Text } from 'react-native';
+import React, { useEffect, useLayoutEffect, useState } from 'react'
+import { StyleSheet, View, Dimensions } from 'react-native';
 import { getStores, getTags } from '../../Api/DataApi';
 import { useDispatch, useSelector, useStore } from 'react-redux';
 import Map from './Map/Map';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { set_token, SET_USER } from '../../../Redux/actions/authActions';
 import ShowStore from '../../Components/Info/ShowStore';
-import ListItems from '../../Components/Services/ListItems';
+import ListItems from '../../Components/Services/ListItems/ListItems';
 import { set_tags } from '../../../Redux/actions/tagsActions';
 import { set_region } from '../../../Redux/actions/locationActions';
 import { set_stores } from '../../../Redux/actions/infoActions';
 import { getSession } from '../../Api/AuthApi';
 import PanelOptions from '../../Components/User/PanelOptions/PanelOptions';
-import * as firebase from 'firebase';
 import { getDownloadUrl } from '../../Utils/Firebase/FirebaseUtils';
 import { ADD_SEARCH } from '../../../Redux/actions/searchActions';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { Button, Icon } from 'react-native-elements';
+import { Image } from 'react-native';
+import Logo from "../../../assets/logo.png";
 
-export default function Home({ navigation }) {
+function Home({ navigation }) {
     const [init, setInit] = useState(false);
     const [stores, setStores] = useState([]);
-    const store = useStore();
     const dispatch = useDispatch();
     const info = useSelector(state => state.info.store);
+    const tab = useSelector(state => state.tabsManager.tab);
+    const token = useSelector(state => state.auth.token);
 
-    const listStores = () => {
-        getStores().then((response) => {
-            const data = response.data;
 
-            for (let index = 0; index < data.length; index++) {
-                const store = data[index];
+    useLayoutEffect(() => {
+        navigation.setOptions({
+            title: 'PAYSANDÚ',
+            headerStyle: {
+                backgroundColor: '#f4511e',
+            },
+            headerLeft: () => (
+                <Image style={{ marginHorizontal: 20, resizeMode: 'contain', width: 100 }} source={Logo} />
+            ),
+            headerRight: () => (
+                <TouchableOpacity
+                    onPress={() =>
+                        navigation.navigate("Profile")
+                    }
+                >
+                    <Icon
+                        reverse
+                        name='menu'
+                        type='ionicon'
+                        color='transparent'
+                    />
+                </TouchableOpacity>
+            ),
+        });
+    }, [navigation]);
 
+
+    const listStores = (token) => {
+        getStores(token).then((response) => {
+            const stores = response.data;
+            for (let index = 0; index < stores.length; index++) {
+                const store = stores[index];
                 getDownloadUrl(store.img_first).then((url) => {
                     data[index].img_first = url;
                 })
@@ -37,35 +67,19 @@ export default function Home({ navigation }) {
                         console.log(err);
                     })
                 if (index === data.length - 1) {
-                    console.log("DATA ", data);
-
                     dispatch(set_stores(data))
                 }
             }
         }).catch((err) => {
-            console.log("Error: ", err);
+            console.log("Error: ", err.response.data);
         })
     }
 
-    const getDataUser = () => {
+    const getUserToken = () => {
         AsyncStorage.getItem("auth_token").then((token) => {
             if (token) {
-                getSession(token).then((response) => {
-                    console.log(response);
-                })
-                    .catch((err) => {
-                        console.log(err);
-                    })
+                listStores(token);
             }
-        })
-    }
-
-    const listTags = () => {
-        getTags().then((response) => {
-            const data = response.data;
-            dispatch(set_tags(data));
-            getDataUser();
-            listStores();
         })
     }
 
@@ -81,7 +95,7 @@ export default function Home({ navigation }) {
                 }
                 dispatch(set_region(region));
                 setInit(true);
-                listTags();
+                getUserToken();
             })
         }
 
@@ -101,17 +115,20 @@ export default function Home({ navigation }) {
     }, [])
 
 
-
     return (
         <View style={styles.container}>
             <ListItems />
-            <View style={styles.mapContainer}>
-                <Map stores={stores} />
-            </View>
+            {tab === 'stores' ? (
+                <View style={styles.mapContainer}>
+                    <Map stores={stores} />
+                </View>
+            ) : (
+                <View style={{ flex: 1 }}>
+                    <Text>Servicios</Text>
+                </View>
+            )}
             <ShowStore store={info} visible={info ? true : false} />{/* Muestro informacion del comercio */}
-
             <PanelOptions navigation={navigation} />
-
         </View>
     )
 }
@@ -132,3 +149,5 @@ const styles = StyleSheet.create({
         borderTopEndRadius: 15,
     }
 })
+
+export default Home;

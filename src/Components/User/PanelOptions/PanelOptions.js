@@ -5,14 +5,14 @@ import PanelListItems from './PanelListItems'
 import Help from './Options/Help'
 import { SwipeablePanel } from 'rn-swipeable-panel'
 import { useDispatch, useSelector } from 'react-redux'
-import { CHANGE_OPTIONPANEL_VISIBLE } from '../../../../Redux/actions/panelsActions'
+import { set_open_panel } from '../../../../Redux/actions/panelsActions'
 
 export default function PanelOptions({ navigation }) {
     const item = "none"
     const dispatch = useDispatch();
 
     const closePanel = () =>{
-        dispatch(CHANGE_OPTIONPANEL_VISIBLE(false))
+        dispatch(set_open_panel(false))
     }
 
     const [panelProps, setPanelProps] = useState({
@@ -23,11 +23,10 @@ export default function PanelOptions({ navigation }) {
         onPressCloseButton: () => closePanel(),
         // ...or any prop you want
     });
-    const visible = useSelector(state => state.optionsPanel.visible)
+    const visible = useSelector(state => state.panel.open)
     const handleItem = (code) => {
         setitem(code);
     }
-    console.log(visible);
     return (
         <SwipeablePanel {...panelProps} isActive={visible}>
             { item === 'none' ? (

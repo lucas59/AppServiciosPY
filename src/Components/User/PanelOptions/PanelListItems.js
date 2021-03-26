@@ -53,11 +53,8 @@ function PanelListItems({ navigation }) {
     }
 
     const openSession = () => {
-        console.log(navigation);
         navigation.replace("Entry");
-
     }
-    console.log("TOKEN ", token);
     return (
         <View style={{ flex: 1, minHeight: 500, paddingHorizontal: 20, alignItems: 'center', justifyContent: 'center' }}>
             <Text>Menú</Text>

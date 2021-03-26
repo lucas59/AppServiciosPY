@@ -18,11 +18,8 @@ function Map() {
     const region = useSelector(state => state.location.region);
     const stores = useSelector(state => state.info.stores);
 
-    console.log("Stores ",stores);
-
     const myLocation = () => {
         navigator.geolocation.getCurrentPosition((position) => {
-            console.log(position);
             let region = {
                 latitude: position.coords.latitude,
                 longitude: position.coords.longitude,
@@ -37,7 +34,6 @@ function Map() {
         var ref = firebase.storage().ref().child('images/' + store.img_first);
         ref.getDownloadURL()
             .then((urlDownload) => {
-                console.log(urlDownload);
                 store.img_first = urlDownload
                 dispatch(set_store_show(store));
             })
@@ -46,16 +42,12 @@ function Map() {
                 dispatch(set_store_show(store));
             })
     }
-
-    console.log('stores: ', stores);
     return (
         <React.Fragment>
             <MapView region={region} showsUserLocation={true} style={styles.map} >
                 {stores.map((store, index) => {
-                    console.log(store);
                     if (store.tagId) {
                         const coords = JSON.parse(store.user.locations[0].position);
-                        console.log(store.user.locations[0]);
                         let tag = tags.find(tag => tag.id === store.tagId);
                         if (tagSelected) {
                             if (tagSelected.id === 0 || tagSelected.id === store.tagId) {

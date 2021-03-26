@@ -1,5 +1,5 @@
 import Axios from "axios"
-import { CHECK_USER, LOGIN, SIGNUP_PERSONAL, SIGNUP_STORE, USER_ME } from "../Utils/Config"
+import { CHECK_USER, LOGIN, SIGNUP, USER_ME } from "../Utils/Config"
 
 export function login(data) {
     return new Promise((res, req) => {
@@ -13,21 +13,9 @@ export function login(data) {
     })
 }
 
-export function signupPersonal(data) {
+export function signup(data) {
     return new Promise((res, req) => {
-        Axios.post((SIGNUP_PERSONAL), data)
-            .then((response) => {
-                res(response)
-            })
-            .catch((err) => {
-                req(err)
-            })
-    })
-}
-
-export function signupStore(newData) {
-    return new Promise((res, req) => {
-        Axios.post((SIGNUP_STORE), newData)
+        Axios.post(SIGNUP, data)
             .then((response) => {
                 res(response)
             })

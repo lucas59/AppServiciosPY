@@ -2,19 +2,26 @@ import { StyleSheet } from "react-native";
 
 export const StylesInput = StyleSheet.create({
     containerInput: {
-        width:"90%",
+        flexDirection: 'row',
+        alignItems: 'center',
+        height: 45
+    },
+    label: {
+        fontSize: 12,
+        width: '30%',
     },
     input: {
-        marginVertical: 10,
-        borderBottomWidth: 1,
-        borderBottomColor: "#ccc",
-        height: 45,
-        
+        borderWidth: 0,
+        borderRadius: 5,
+        backgroundColor: '#ccc',
+        color: 'black',
+        height: 35,
     },
     messageError: {
         color: "red"
     },
-    errorMessage:{
-        color:'red'
+    errorMessage: {
+        color: 'red',
+        fontSize: 12
     }
 })

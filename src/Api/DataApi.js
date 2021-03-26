@@ -1,9 +1,12 @@
 import Axios from "axios"
 import { STORES, TAGS } from "../Utils/Config"
 
-export function getStores() {
+export function getStores(token) {
     return new Promise((res, req) => {
         Axios.get(STORES, {
+            headers: {
+                Authorization: token
+            },
             withCredentials: true,
         })
             .then((response) => res(response))
@@ -21,7 +24,7 @@ export function getTags() { // TODO remplace tags to categories
     })
 }
 
-export function getCategories() { 
+export function getCategories() {
     return new Promise((res, rej) => {
         Axios.get(TAGS, {
             withCredentials: true

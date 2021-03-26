@@ -7,3 +7,6 @@ export const SET_CREATING_ACCOUNT = "SET_CREATING_ACCOUNT";
 export const SET_CATEGORIES = "SET_CATEGORIES";
 export const ALTERN_PANEL = "ALTERN_PANEL";
 export const SET_SEARCHES = "SET_SEARCHES";
+
+export const SET_TAB = "SET_TAB";
+
