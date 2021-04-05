@@ -15,7 +15,7 @@ export default function Item({ name, icon }) {
     }
 
     return (
-        <TouchableOpacity onPress={() => changeTab(name)} containerStyle={styles}>
+        <TouchableOpacity onPress={() => changeTab(name)} containerStyle={styles.container}>
             <Icon
                 size={30}
                 name={icon}

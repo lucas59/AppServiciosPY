@@ -1,7 +1,7 @@
 const URL_BACKEND = process.env.API;
 export const API_KEY_GOOGLE_MAPS = "http://localhost:8002/";
 
-export const SIGNUP = URL_BACKEND + "user/create";
+export const SIGNUP = URL_BACKEND + "user";
 
 export const LOGIN = URL_BACKEND + "user/login";
 

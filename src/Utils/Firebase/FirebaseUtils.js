@@ -22,7 +22,6 @@ export const uploadImage = (path) => {
             let filename = blob['_data'].name + '-' + uniqueSuffix + '.' + blob['_data'].type.split("/")[1];
             var ref = firebase.storage().ref().child('images/' + filename);
             ref.put(blob).then((val) => {
-                console.log(val);
                 res(filename)
             })
                 .catch((err) => {

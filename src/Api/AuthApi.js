@@ -1,5 +1,5 @@
 import Axios from "axios"
-import { CHECK_USER, LOGIN, SIGNUP, USER_ME, SUB_SERVICE } from "../Utils/Config"
+import { CHECK_USER, LOGIN, SIGNUP, USER_ME, SUB_USER } from "../Utils/Config"
 
 export function login(data) {
     return new Promise((res, req) => {
@@ -59,7 +59,8 @@ export function newService(data, token) {
         const config = {
             headers: { Authorization: token }
         };
-        Axios.post((SUB_SERVICE), data, config)
+        console.log("SUB_SERVICE: ",SUB_USER);
+        Axios.post((SUB_USER), data, config)
             .then((response) => {
                 res(response)
             })

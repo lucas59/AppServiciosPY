@@ -1,19 +1,9 @@
-import React, { useState } from 'react'
-import { View, StyleSheet, Dimensions } from 'react-native'
-import { useDispatch, useSelector } from 'react-redux'
-import { set_tag_show } from '../../../../Redux/actions/tagsActions'
+import React from 'react'
+import { View, StyleSheet } from 'react-native'
 import { Text } from 'react-native'
-import { TouchableOpacity } from 'react-native'
-import { CHANGE_TAB } from '../../../../Redux/actions/tabsActions'
-import { Icon } from 'react-native-elements'
 import Item from './Item'
 
 function ListItems() {
-    const dispatch = useDispatch();
-    const changeTab = (name) => {
-        dispatch(CHANGE_TAB(name))
-    }
-
     return (
         <View style={styles.container}>
             <View style={styles.headerTabs}>

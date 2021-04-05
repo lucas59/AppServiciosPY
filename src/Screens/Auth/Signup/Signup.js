@@ -223,7 +223,7 @@ export default function Signup() {
                         start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}
                         colors={['#FD6C59', '#F05758', '#DF3E57', '#D32A56', '#C61755', '#C10F55']}
                     >
-                        <Button transparent style={{ width: 200, height: 40, justifyContent: 'center', alignItems: 'center' }}>
+                        <Button onPress={formik.handleSubmit} transparent style={{ width: 200, height: 40, justifyContent: 'center', alignItems: 'center' }}>
                             <Text style={{ color: 'white' }} >Crear Cuenta</Text>
                         </Button>
                     </LinearGradient>
