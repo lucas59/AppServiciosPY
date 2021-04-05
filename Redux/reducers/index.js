@@ -15,9 +15,9 @@ export default combineReducers({
     info: infoReducer,
     tags: tagReducer,
     signup: signupReducer,
-    category: categoryReducer,
+    //category: categoryReducer,
     panel: panelReducer,
-    filters: searchReducer,
+    //filters: searchReducer,
 
     tabsManager: tabsReducers
 })

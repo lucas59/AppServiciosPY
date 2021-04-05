@@ -10,8 +10,6 @@ import Item from './Item'
 
 function ListItems() {
     const dispatch = useDispatch();
-
-
     const changeTab = (name) => {
         dispatch(CHANGE_TAB(name))
     }

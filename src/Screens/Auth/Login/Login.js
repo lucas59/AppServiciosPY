@@ -34,7 +34,6 @@ export default function Login() {
     const navigation = useNavigation();
 
     useEffect(() => {
-        //AsyncStorage.removeItem("auth_token")
         AsyncStorage.getItem("auth_token").then((token) => {
             if (token) {
                 navigation.replace('Home');
@@ -46,18 +45,20 @@ export default function Login() {
         login({ email: values.email, password: values.password })
             .then((res) => {
                 const data = res.data;
-                console.log(data);
                 dispatch(set_token(data.token));
                 dispatch(SET_USER(data.user));
                 AsyncStorage.setItem("auth_token", JSON.stringify(data.token));
-                dispatch(CHANGE_OPTIONPANEL_VISIBLE(false));
+                //    dispatch(CHANGE_OPTIONPANEL_VISIBLE(false));
                 AsyncStorage.setItem("auth_user", JSON.stringify(data.user));
                 navigation.replace("Home");
             })
-            .catch(({ response }) => {
-                Alert.alert("Aviso", "asds");
+            .catch(response => {
+                console.log(response);
+                Alert.alert("Usuario o contraseña incorrecto.")
             })
+
     }
+
     const formik = useFormik({
         initialValues: {
             email: '',

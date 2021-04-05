@@ -7,6 +7,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { useFormik } from 'formik';
 import { TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import ManagerStores from './ManagerStores';
 
 export default function Profile({ navigation }) {
 
@@ -29,69 +30,52 @@ export default function Profile({ navigation }) {
         //validate
     });
 
-    const logOut = () => {
-        console.log("Cerrando sesión");
-        AsyncStorage.removeItem("auth_token");
-        AsyncStorage.removeItem("auth_user");
-        navigation.replace("Login");
-    }
-
     return (
-        <View style={{ flex: 1, paddingHorizontal: 10, justifyContent: 'center' }}>
-            <View style={{ flex: 1, justifyContent: "flex-end", paddingVertical: 20 }}>
-                <Text style={{ fontSize: 22 }}>Tu perfil en DONDE?: </Text>
-            </View>
-            <View style={{ flex: 2, paddingHorizontal: 20, justifyContent: 'flex-start', flexDirection: 'row' }}>
-                <View style={{ flex: 2, paddingHorizontal: 5, paddingVertical: 20 }}>
-                    <View style={{ backgroundColor: 'red', width: 100, height: 100 }}></View>
+        <View style={{ flex: 1, justifyContent: 'center' }}>
+            <View style={{ flex: 3, padding: 20, alignItems: 'center', justifyContent: 'center' }}>
+                <Text style={{ fontSize: 22, paddingVertical: 20 }}>Tu perfil en DONDE: </Text>
+                <View style={{ width: '100%' }}>
+                    <MyTextInput
+                        label={'Nombre: '}
+                        placeholder="Nombre"
+                        onChangeText={formik.handleChange('name')}
+                        value={formik.values.name}
+                        error={formik.errors.name}
+                        onBlur={formik.handleBlur('name')}
+                        touched={formik.touched.name}
+                        type={"emailAddress"}
+                    />
+                    <MyTextInput
+                        label="Apellido"
+                        placeholder="Apellido"
+                        onChangeText={formik.handleChange('surname')}
+                        value={formik.values.surname}
+                        error={formik.errors.surname}
+                        onBlur={formik.handleBlur('surname')}
+                        touched={formik.touched.surname}
+                        type={"emailAddress"}
+                    />
+                    <MyTextInput
+                        label="Celular"
+                        placeholder="Celular"
+                        onChangeText={formik.handleChange('phone')}
+                        value={formik.values.phone}
+                        error={formik.errors.phone}
+                        onBlur={formik.handleBlur('phone')}
+                        touched={formik.touched.phone}
+                        type={"phone"}
+                    />
+                    <MyTextInput
+                        label="Mail"
+                        placeholder="Mail"
+                        onChangeText={formik.handleChange('email')}
+                        value={formik.values.email}
+                        error={formik.errors.email}
+                        onBlur={formik.handleBlur('email')}
+                        touched={formik.touched.email}
+                        type={"emailAddress"}
+                    />
                 </View>
-                <View style={{ flex: 4, alignItems: 'center', paddingVertical: 20 }}>
-                    <View style={{ width: '100%' }}>
-                        <MyTextInput
-                            label={'Nombre: '}
-                            placeholder="Nombre"
-                            onChangeText={formik.handleChange('name')}
-                            value={formik.values.name}
-                            error={formik.errors.name}
-                            onBlur={formik.handleBlur('name')}
-                            touched={formik.touched.name}
-                            type={"emailAddress"}
-                        />
-                        <MyTextInput
-                            label="Apellido"
-                            placeholder="Apellido"
-                            onChangeText={formik.handleChange('surname')}
-                            value={formik.values.surname}
-                            error={formik.errors.surname}
-                            onBlur={formik.handleBlur('surname')}
-                            touched={formik.touched.surname}
-                            type={"emailAddress"}
-                        />
-                        <MyTextInput
-                            label="Celular"
-                            placeholder="Celular"
-                            onChangeText={formik.handleChange('phone')}
-                            value={formik.values.phone}
-                            error={formik.errors.phone}
-                            onBlur={formik.handleBlur('phone')}
-                            touched={formik.touched.phone}
-                            type={"phone"}
-                        />
-                        <MyTextInput
-                            label="Mail"
-                            placeholder="Mail"
-                            onChangeText={formik.handleChange('email')}
-                            value={formik.values.email}
-                            error={formik.errors.email}
-                            onBlur={formik.handleBlur('email')}
-                            touched={formik.touched.email}
-                            type={"emailAddress"}
-                        />
-
-                    </View>
-                </View>
-            </View>
-            <View style={{ alignItems: 'center' }}>
                 <LinearGradient
                     style={{ width: 200, marginTop: 10, height: 40, borderRadius: 5 }}
                     start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}
@@ -101,46 +85,9 @@ export default function Profile({ navigation }) {
                         <Text style={{ fontSize: 18, color: 'white' }}>Cambiar contraseña</Text>
                     </TouchableOpacity>
                 </LinearGradient>
+
             </View>
-
-            <View style={{ flex: 3, flexDirection: 'column', alignItems: 'center', paddingTop: 30 }}>
-                <Text style={{ fontSize: 24 }}>Tus comercios o servicios:</Text>
-                <View style={{ width: '90%' }}>
-                    <Text>Comercial: </Text>
-                </View>
-                <View style={{ width: '90%' }}>
-                    <Text>Servicios: </Text>
-                </View>
-
-                <View style={{ height: 100, width: '100%', flexDirection: 'row', justifyContent: "flex-end" }}>
-                    <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center', width: "auto", maxWidth: '50%', flex: 3 }}>
-                        <Text style={{ textAlign: 'center', marginHorizontal: 5 }}>Nuevo Comercio:</Text>
-                        <Icon
-
-                            reverse
-                            reverseColor="white"
-                            size={22}
-                            name={"plus"}
-                            type='font-awesome-5'
-                            color={'red'}
-                        />
-                    </TouchableOpacity>
-                    <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center', width: "auto", maxWidth: '50%', flex: 3 }}>
-                        <Text style={{ textAlign: 'center', marginHorizontal: 5 }}>Nuevo Comercio:</Text>
-                        <Icon
-                            reverse
-                            reverseColor="white"
-                            size={22}
-                            name={"plus"}
-                            type='font-awesome-5'
-                            color={'blue'}
-                        />
-                    </TouchableOpacity>
-                </View>
-                <TouchableOpacity onPress={logOut}>
-                    <Text style={{ fontSize: 28, color: "red" }}>Cerrar sesión</Text>
-                </TouchableOpacity>
-            </View>
+            <ManagerStores />
         </View>
     )
 }

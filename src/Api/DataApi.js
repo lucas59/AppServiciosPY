@@ -1,9 +1,10 @@
 import Axios from "axios"
-import { STORES, TAGS } from "../Utils/Config"
+import { STORES, SUB_USER, TAGS } from "../Utils/Config"
 
-export function getStores(token) {
+
+export function getSubUsers(token) {
     return new Promise((res, req) => {
-        Axios.get(STORES, {
+        Axios.get(SUB_USER, {
             headers: {
                 Authorization: token
             },
@@ -13,6 +14,7 @@ export function getStores(token) {
             .catch((err) => req(err))
     })
 }
+
 
 export function getTags() { // TODO remplace tags to categories
     return new Promise((res, req) => {

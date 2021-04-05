@@ -24,7 +24,7 @@ export default function MyTextInput(props) {
             autoCompleteType={props.autoCompleteType}
             autoCapitalize={props.autoCapitalize}
           />
-          {(props.error && props.touched) && <Icon color="red" name='close-circle' />}
+          {(!props.error && props.touched) && <Icon name='checkmark-circle' />}
         </Item>
         {props.error && props.touched ? <Text style={StylesInput.errorMessage}>{props.error}</Text> : null}
       </View>
