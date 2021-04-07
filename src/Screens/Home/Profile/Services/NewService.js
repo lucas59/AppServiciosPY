@@ -13,6 +13,7 @@ import { useSelector } from 'react-redux';
 import { uploadImage } from '../../../../Utils/Firebase/FirebaseUtils';
 import { ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 
 export default function NewService() {
@@ -91,68 +92,69 @@ export default function NewService() {
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
+            <KeyboardAwareScrollView>
+                <View style={styles.container}>
+                    <View style={styles.form}>
+                        {image ? (
+                            <Image style={styles.image} source={{ uri: image }} />
+                        ) : (
+                            <Image style={styles.image} source={require('../../../../../assets/icons/locals.png')} />
+                        )}
 
-            <View style={styles.container}>
-                <View style={styles.form}>
-                    {image ? (
-                        <Image style={styles.image} source={{ uri: image }} />
-                    ) : (
-                        <Image style={styles.image} source={require('../../../../../assets/icons/locals.png')} />
-                    )}
+                        <TouchableOpacity onPress={openImagePickerAsync} style={styles.pickerImage}>
+                            <Icon name="camera" />
+                            <Text style={styles.buttonText}>Seleccionar una imagen</Text>
+                        </TouchableOpacity>
 
-                    <TouchableOpacity onPress={openImagePickerAsync} style={styles.pickerImage}>
-                        <Icon name="camera" />
-                        <Text style={styles.buttonText}>Seleccionar una imagen</Text>
-                    </TouchableOpacity>
+                        <MyTextInput
+                            placeholder="Nombre"
+                            onChangeText={formik.handleChange('name')}
+                            value={formik.values.name}
+                            error={formik.errors.name}
+                            onBlur={formik.handleBlur('name')}
+                            touched={formik.touched.name}
+                            type={"name"}
+                        />
 
-                    <MyTextInput
-                        placeholder="Nombre"
-                        onChangeText={formik.handleChange('name')}
-                        value={formik.values.name}
-                        error={formik.errors.name}
-                        onBlur={formik.handleBlur('name')}
-                        touched={formik.touched.name}
-                        type={"name"}
-                    />
+                        <MyTextInput
+                            placeholder="Celular"
+                            onChangeText={formik.handleChange('phone')}
+                            value={formik.values.phone}
+                            error={formik.errors.phone}
+                            onBlur={formik.handleBlur('phone')}
+                            touched={formik.touched.phone}
+                            type={"phone"}
+                        />
 
-                    <MyTextInput
-                        placeholder="Celular"
-                        onChangeText={formik.handleChange('phone')}
-                        value={formik.values.phone}
-                        error={formik.errors.phone}
-                        onBlur={formik.handleBlur('phone')}
-                        touched={formik.touched.phone}
-                        type={"phone"}
-                    />
+                        <View style={{ width: '100%' }}>
+                            <Picker
+                                mode="dialog"
+                                iosIcon={<Icon type="FontAwesome5" name="arrow-down" />}
+                                style={{
+                                    width: '100%',
+                                    marginVertical: 15,
+                                    borderBottomColor: '#ccc',
+                                    borderBottomWidth: 1
+                                }}
+                                placeholder="Categoría"
+                                placeholderStyle={{ color: "#bfc6ea" }}
+                                placeholderIconColor="#007aff"
+                                selectedValue={formik.values.category}
+                                onValueChange={formik.handleChange('category')}
+                            >
+                                <Picker.Item label="Wallet" value="key0" />
+                                <Picker.Item label="ATM Card" value="key1" />
+                                <Picker.Item label="Debit Card" value="key2" />
+                                <Picker.Item label="Credit Card" value="key3" />
+                                <Picker.Item label="Net Banking" value="key4" />
+                            </Picker>
+                        </View>
+                        <Textarea bordered style={{ width: '100%' }} rowSpan={4} onChangeText={formik.handleChange('description')} placeholder="Descripción" />
 
-                    <View style={{ width: '100%' }}>
-                        <Picker
-                            mode="dialog"
-                            iosIcon={<Icon type="FontAwesome5" name="arrow-down" />}
-                            style={{
-                                width: '100%',
-                                marginVertical: 15,
-                                borderBottomColor: '#ccc',
-                                borderBottomWidth: 1
-                            }}
-                            placeholder="Categoría"
-                            placeholderStyle={{ color: "#bfc6ea" }}
-                            placeholderIconColor="#007aff"
-                            selectedValue={formik.values.category}
-                            onValueChange={formik.handleChange('category')}
-                        >
-                            <Picker.Item label="Wallet" value="key0" />
-                            <Picker.Item label="ATM Card" value="key1" />
-                            <Picker.Item label="Debit Card" value="key2" />
-                            <Picker.Item label="Credit Card" value="key3" />
-                            <Picker.Item label="Net Banking" value="key4" />
-                        </Picker>
+                        <Button disabled={loading} onPress={formik.handleSubmit} style={styles.btnSuccess}>{loading && (<Spinner size={10} color='white' />)}<Text>Crear</Text></Button>
                     </View>
-                    <Textarea bordered style={{ width: '100%' }} rowSpan={4} onChangeText={formik.handleChange('description')} placeholder="Descripción" />
-
-                    <Button disabled={loading} onPress={formik.handleSubmit} style={styles.btnSuccess}>{loading && (<Spinner size={10} color='white' />)}<Text>Crear</Text></Button>
                 </View>
-            </View>
+            </KeyboardAwareScrollView>
         </SafeAreaView>
     )
 }

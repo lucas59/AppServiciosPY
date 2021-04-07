@@ -36,7 +36,7 @@ const StylesInput = StyleSheet.create({
   containerInput: {
     flexDirection: 'row',
     alignItems: 'center',
-    height: 40,
+    height: 30,
     marginVertical: 15
   },
   label: {

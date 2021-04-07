@@ -25,6 +25,8 @@ export default function Logout() {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1
+        flex: 1,
+        position:'absolute',
+        bottom:10
     }
 })
